@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Peskovsko trkalo</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      background: url('https://images.unsplash.com/photo-1518717758536-85ae29035b6d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDJ8fGRvZ3xlbnwwfHx8fDE2ODAxNDc2MzY&ixlib=rb-1.2.1&q=80&w=1080') no-repeat center center fixed;
+      background-size: cover;
+      color: #fff;
+    }
+
+    h1 {
+      margin-top: 20px;
+      font-size: 2.5em;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    }
+
+    #wheel {
+      width: 90%;
+      max-width: 400px;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      border: 10px solid #fff;
+      margin: 20px auto;
+      position: relative;
+      transform: rotate(0deg);
+      transition: transform 3s cubic-bezier(0.1, 0.9, 0.1, 1);
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+    }
+
+    #wheel div {
+      width: 50%;
+      height: 50%;
+      position: absolute;
+      transform-origin: 100% 100%;
+      clip-path: polygon(100% 0, 100% 100%, 0 100%);
+    }
+
+    #wheel div:nth-child(1) {
+      background: linear-gradient(135deg, #f44336, #ff7961);
+      transform: rotate(0deg);
+    }
+
+    #wheel div:nth-child(2) {
+      background: linear-gradient(135deg, #4CAF50, #80e27e);
+      transform: rotate(72deg);
+    }
+
+    #wheel div:nth-child(3) {
+      background: linear-gradient(135deg, #2196F3, #64b5f6);
+      transform: rotate(144deg);
+    }
+
+    #wheel div:nth-child(4) {
+      background: linear-gradient(135deg, #FFC107, #ffe57f);
+      transform: rotate(216deg);
+    }
+
+    #wheel div:nth-child(5) {
+      background: linear-gradient(135deg, #9C27B0, #ce93d8);
+      transform: rotate(288deg);
+    }
+
+    #spinButton {
+      margin-top: 20px;
+      padding: 15px 30px;
+      font-size: 20px;
+      cursor: pointer;
+      background: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.3);
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+
+    #spinButton:hover {
+      background: #0056b3;
+      transform: scale(1.05);
+    }
+
+    #spinButton:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+
+    #result {
+      margin-top: 30px;
+      font-size: 28px;
+      font-weight: bold;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 1.8em;
+      }
+
+      #spinButton {
+        font-size: 16px;
+        padding: 10px 20px;
+      }
+
+      #result {
+        font-size: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Trkaloto na Peskite</h1>
+  <div id="wheel">
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
+  <button id="spinButton">Klikaj pesko</button>
+  <p id="result"></p>
+
+  <script>
+    const gifts = ["Gift 1: iPhone", "Gift 2: Laptop", "Gift 3: Headphones", "Gift 4: Gift Card", "Gift 5: Watch"];
+    let remainingGifts = [...gifts];
+    const spinButton = document.getElementById("spinButton");
+    const result = document.getElementById("result");
+    const wheel = document.getElementById("wheel");
+    let currentRotation = 0;
+
+    spinButton.addEventListener("click", () => {
+      if (remainingGifts.length === 0) {
+        result.textContent = "All gifts have been given out!";
+        spinButton.disabled = true;
+        return;
+      }
+
+      const randomIndex = Math.floor(Math.random() * remainingGifts.length);
+      const selectedGift = remainingGifts[randomIndex];
+      remainingGifts.splice(randomIndex, 1);
+
+      const rotations = Math.floor(Math.random() * 5 + 8); // 8-12 full spins
+      const sliceAngle = 360 / gifts.length; 
+      const degrees = randomIndex * sliceAngle;
+      const finalRotation = rotations * 360 + degrees;
+      currentRotation += finalRotation;
+
+      wheel.style.transition = "transform 3s cubic-bezier(0.1, 0.9, 0.1, 1)";
+      wheel.style.transform = `rotate(${currentRotation}deg)`;
+
+      spinButton.disabled = true;
+      setTimeout(() => {
+        result.textContent = selectedGift;
+        spinButton.disabled = false;
+      }, 3000);
+    });
+  </script>
+</body>
+</html>
